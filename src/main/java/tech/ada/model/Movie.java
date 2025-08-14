@@ -1,20 +1,30 @@
 package tech.ada.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.time.LocalDate;
 
-public class Movie {
 
+@Entity
+@Table(name = "movie")
+public class Movie extends PanacheEntity {
+
+    @Column(name = "original_title", nullable = false)
     @JsonProperty("original_title")
     private String originalTitle;
-
+    @Column(name = "poster_path", nullable = false)
     @JsonProperty("poster_path")
     private String posterPath;
-
+    @Column(name = "overview", nullable = false, length = 1000)
     private String overview;
+    @Column(name = "release_date", nullable = false)
     @JsonProperty("release_date")
     private LocalDate releaseDate;
+    @Column(name = "genre", nullable = false)
     private String genre;
 
     public Movie(String originalTitle,

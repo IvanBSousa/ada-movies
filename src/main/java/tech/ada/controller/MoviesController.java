@@ -1,10 +1,14 @@
 package tech.ada.controller;
 
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import tech.ada.dto.MovieDTO;
+import tech.ada.dto.mapper.MovieMapper;
 import tech.ada.model.Movie;
+import tech.ada.repository.MovieRepository;
 
 import java.util.List;
 
@@ -13,20 +17,27 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class MoviesController {
 
+//    @Inject
+//    MovieRepository repository;
+
+    private final MovieRepository repository;
+
+    public MoviesController(MovieRepository repository) {
+        this.repository = repository;
+    }
+
     @GET
     public Response getMovies() {
-        List<Movie> movies = Movie.findAll().list();
+        List<Movie> movies = repository.findAll().list();
         return Response.status(Response.Status.OK).entity(movies)
                 .build();
     }
 
     @POST
     @Transactional
-    public Response addMovie(Movie movie) {
-        Movie.persist(movie);
-        return Response.status(Response.Status.CREATED).entity(movie).build();
+    public Response addMovie(MovieDTO movieDto) {
+        repository.persist(MovieMapper.toEntity(movieDto));
+        return Response.status(Response.Status.CREATED).entity(movieDto).build();
     }
-
-
 
 }

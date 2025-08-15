@@ -2,17 +2,19 @@ package tech.ada.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name = "movie")
-public class Movie extends PanacheEntity {
+public class Movie {
 
+    @Id
+    @GeneratedValue
+    private Long id;
     @Column(name = "original_title", nullable = false)
     @JsonProperty("original_title")
     private String originalTitle;
@@ -26,6 +28,9 @@ public class Movie extends PanacheEntity {
     private LocalDate releaseDate;
     @Column(name = "genre", nullable = false)
     private String genre;
+    @JsonProperty("created_at")
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public Movie(String originalTitle,
                  String posterPath,
@@ -40,6 +45,14 @@ public class Movie extends PanacheEntity {
     }
 
     public Movie() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getOriginalTitle() {
         return originalTitle;
@@ -79,5 +92,13 @@ public class Movie extends PanacheEntity {
 
     public void setGenre(String genre) {
         this.genre = genre;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

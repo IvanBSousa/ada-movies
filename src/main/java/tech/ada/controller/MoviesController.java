@@ -1,18 +1,13 @@
 package tech.ada.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.resteasy.reactive.RestPath;
 import tech.ada.dto.MovieDTO;
-import tech.ada.dto.mapper.MovieMapper;
-import tech.ada.exception.TitleAlreadyExistsException;
 import tech.ada.model.Movie;
-import tech.ada.repository.MovieRepository;
-import tech.ada.service.CreateMovieService;
+import tech.ada.service.MovieService;
 
 import java.util.List;
 
@@ -21,30 +16,51 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class MoviesController {
 
-//    @Inject
-//    MovieRepository repository;
+    private final MovieService movieService;
 
-    private final MovieRepository repository;
-    private final CreateMovieService createMovieService;
-
-    public MoviesController(MovieRepository repository,
-                            CreateMovieService createMovieService) {
-        this.repository = repository;
-        this.createMovieService = createMovieService;
+    public MoviesController(MovieService movieService) {
+        this.movieService = movieService;
     }
 
     @GET
     public Response getMovies() {
-        List<Movie> movies = repository.findAll().list();
-        return Response.status(Response.Status.OK).entity(movies)
+        List<MovieDTO> movies = movieService.getAll();
+        return Response
+                .status(Response.Status.OK)
+                .entity(movies)
+                .build();
+    }
+
+    @Path("/{id}")
+    @GET
+    public Response getById(@RestPath Long id) {
+        return Response
+                .status(Response.Status.OK)
+                .entity(movieService.getById(id))
                 .build();
     }
 
     @POST
     @Transactional
     public Response addMovie(MovieDTO movieDto) {
-        Movie movie = createMovieService.create(movieDto);
+        Movie movie = movieService.create(movieDto);
         return Response.status(Response.Status.CREATED).entity(movie).build();
+    }
+
+    @Path("/{id}")
+    @PUT
+    @Transactional
+    public Response updateMovie(@RestPath Long id, MovieDTO movieDto) {
+        movieService.update(id, movieDto);
+        return Response.status(Response.Status.OK).build();
+    }
+
+    @Path("/{id}")
+    @DELETE
+    @Transactional
+    public Response deleteMovie(@RestPath Long id) {
+        movieService.delete(id);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
 }

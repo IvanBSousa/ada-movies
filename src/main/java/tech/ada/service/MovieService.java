@@ -1,21 +1,22 @@
 package tech.ada.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 import tech.ada.dto.MovieDTO;
 import tech.ada.dto.mapper.MovieMapper;
 import tech.ada.exception.TitleAlreadyExistsException;
+import tech.ada.exception.TitleNotExistsException;
 import tech.ada.model.Movie;
 import tech.ada.repository.MovieRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
-public class CreateMovieService {
+public class MovieService {
 
     private final MovieRepository repository;
 
-    public CreateMovieService(MovieRepository repository) {
+    public MovieService(MovieRepository repository) {
         this.repository = repository;
     }
 
@@ -28,6 +29,33 @@ public class CreateMovieService {
         }
         Movie movie = MovieMapper.toEntity(movieDTO);
         repository.persist(movie);
+        return movie;
+    }
+
+    public MovieDTO getById(Long id) {
+        return MovieMapper.toDTO(findById(id));
+    }
+
+    public List<MovieDTO> getAll() {
+        return repository.findAll()
+                .list().stream().map(MovieMapper::toDTO).toList();
+    }
+
+    public void update(Long id, MovieDTO movieDTO) {
+        Movie movie = findById(id);
+        MovieMapper.updateMovie(movieDTO, movie);
+    }
+
+    public void delete(Long id) {
+        Movie movie = findById(id);
+        repository.delete(movie);
+    }
+
+    private Movie findById(Long id) {
+        Movie movie = repository.findById(id);
+        if (movie == null) {
+            throw new TitleNotExistsException("Title with id " + id + " not found");
+        }
         return movie;
     }
 

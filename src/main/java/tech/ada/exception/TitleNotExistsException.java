@@ -1,4 +1,7 @@
 package tech.ada.exception;
 
-public class TitleNotExistsException {
+public class TitleNotExistsException extends RuntimeException {
+    public TitleNotExistsException(String mensagem) {
+        super(mensagem);
+    }
 }

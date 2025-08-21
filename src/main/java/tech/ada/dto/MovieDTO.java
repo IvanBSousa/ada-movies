@@ -1,6 +1,7 @@
 package tech.ada.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import tech.ada.model.Movie;
 
 import java.time.LocalDate;

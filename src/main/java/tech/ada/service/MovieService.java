@@ -1,6 +1,9 @@
 package tech.ada.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import tech.ada.dto.MovieDTO;
 import tech.ada.dto.mapper.MovieMapper;
 import tech.ada.exception.TitleAlreadyExistsException;
@@ -10,6 +13,7 @@ import tech.ada.repository.MovieRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @ApplicationScoped
 public class MovieService {
@@ -21,10 +25,10 @@ public class MovieService {
     }
 
     public Movie create(MovieDTO movieDTO) {
-        Optional<Movie> optinalMovie =
+        Optional<Movie> optionalMovie =
                 repository.findByTitle(movieDTO.getOriginalTitle());
 
-        if (optinalMovie.isPresent()) {
+        if (optionalMovie.isPresent()) {
             throw new TitleAlreadyExistsException("The title already exists");
         }
         Movie movie = MovieMapper.toEntity(movieDTO);

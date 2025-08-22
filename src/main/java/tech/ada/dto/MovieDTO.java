@@ -1,20 +1,26 @@
 package tech.ada.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.*;
 import tech.ada.model.Movie;
 
 import java.time.LocalDate;
 
 public class MovieDTO {
 
+
+    @NotBlank(message = "title cannot be empty")
+    @Size(min = 3, max = 64)
     @JsonProperty("original_title")
     private String originalTitle;
+    @NotBlank
     @JsonProperty("poster_path")
     private String posterPath;
+    @NotBlank
     private String overview;
     @JsonProperty("release_date")
     private LocalDate releaseDate;
+    @NotBlank
     private String genre;
 
     public String getOriginalTitle() {

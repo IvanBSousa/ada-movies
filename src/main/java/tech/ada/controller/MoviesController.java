@@ -1,6 +1,7 @@
 package tech.ada.controller;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -22,6 +23,13 @@ public class MoviesController {
         this.movieService = movieService;
     }
 
+    @POST
+    @Transactional
+    public Response addMovie(@Valid MovieDTO movieDto) {
+        Movie movie = movieService.create(movieDto);
+        return Response.status(Response.Status.CREATED).entity(movie).build();
+    }
+
     @GET
     public Response getMovies() {
         List<MovieDTO> movies = movieService.getAll();
@@ -38,13 +46,6 @@ public class MoviesController {
                 .status(Response.Status.OK)
                 .entity(movieService.getById(id))
                 .build();
-    }
-
-    @POST
-    @Transactional
-    public Response addMovie(MovieDTO movieDto) {
-        Movie movie = movieService.create(movieDto);
-        return Response.status(Response.Status.CREATED).entity(movie).build();
     }
 
     @Path("/{id}")

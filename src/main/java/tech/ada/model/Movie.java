@@ -1,7 +1,5 @@
 package tech.ada.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -16,19 +14,16 @@ public class Movie {
     @GeneratedValue
     private Long id;
     @Column(name = "original_title", nullable = false)
-    @JsonProperty("original_title")
     private String originalTitle;
     @Column(name = "poster_path", nullable = false)
-    @JsonProperty("poster_path")
     private String posterPath;
     @Column(name = "overview", nullable = false, length = 1000)
     private String overview;
     @Column(name = "release_date", nullable = false)
-    @JsonProperty("release_date")
     private LocalDate releaseDate;
-    @Column(name = "genre", nullable = false)
-    private String genre;
-    @JsonProperty("created_at")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "genre_id")
+    private Genre genre;
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -36,7 +31,7 @@ public class Movie {
                  String posterPath,
                  String overview,
                  LocalDate releaseDate,
-                 String genre) {
+                 Genre genre) {
         this.originalTitle = originalTitle;
         this.posterPath = posterPath;
         this.overview = overview;
@@ -86,11 +81,11 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-    public String getGenre() {
+    public Genre getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         this.genre = genre;
     }
 

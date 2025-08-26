@@ -1,27 +1,32 @@
 package tech.ada.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
 import tech.ada.dto.MovieDTO;
 import tech.ada.dto.mapper.MovieMapper;
 import tech.ada.exception.TitleAlreadyExistsException;
 import tech.ada.exception.TitleNotExistsException;
+import tech.ada.model.GenreEnum;
 import tech.ada.model.Movie;
-import tech.ada.repository.MovieRepository;
+import tech.ada.persistence.GenreRepository;
+import tech.ada.persistence.MovieRepository;
+import tech.ada.repository.MovieDataSource;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @ApplicationScoped
 public class MovieService {
 
     private final MovieRepository repository;
+    private final MovieDataSource movieDataSource;
+    private final GenreRepository genreRepository;
 
-    public MovieService(MovieRepository repository) {
+    public MovieService(MovieRepository repository,
+                        MovieDataSource movieDataSource,
+                        GenreRepository genreRepository) {
         this.repository = repository;
+        this.movieDataSource = movieDataSource;
+        this.genreRepository = genreRepository;
     }
 
     public Movie create(MovieDTO movieDTO) {
@@ -32,6 +37,8 @@ public class MovieService {
             throw new TitleAlreadyExistsException("The title already exists");
         }
         Movie movie = MovieMapper.toEntity(movieDTO);
+        movie.setGenre(genreRepository.findById(
+                GenreEnum.fromName(movieDTO.getGenre()).getId()));
         repository.persist(movie);
         return movie;
     }
@@ -41,8 +48,7 @@ public class MovieService {
     }
 
     public List<MovieDTO> getAll() {
-        return repository.findAll()
-                .list().stream().map(MovieMapper::toDTO).toList();
+        return movieDataSource.getMovies();
     }
 
     public void update(Long id, MovieDTO movieDTO) {

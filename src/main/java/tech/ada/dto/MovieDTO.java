@@ -1,8 +1,9 @@
 package tech.ada.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.*;
-import tech.ada.model.Movie;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
@@ -20,8 +21,7 @@ public class MovieDTO {
     private String overview;
     @JsonProperty("release_date")
     private LocalDate releaseDate;
-    @NotBlank
-    private String genre;
+    private String genreId;
 
     public String getOriginalTitle() {
         return originalTitle;
@@ -56,10 +56,10 @@ public class MovieDTO {
     }
 
     public String getGenre() {
-        return genre;
+        return genreId;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setGenre(String genreId) {
+        this.genreId = genreId;
     }
 }

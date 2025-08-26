@@ -13,7 +13,6 @@ public class MovieMapper {
         movie.setOriginalTitle(movieDTO.getOriginalTitle());
         movie.setReleaseDate(movieDTO.getReleaseDate());
         movie.setOverview(movieDTO.getOverview());
-        movie.setGenre(movieDTO.getGenre());
         movie.setPosterPath(movieDTO.getPosterPath());
         return movie;
     }
@@ -25,7 +24,6 @@ public class MovieMapper {
         movie.setOriginalTitle(movieDTO.getOriginalTitle());
         movie.setReleaseDate(movieDTO.getReleaseDate());
         movie.setOverview(movieDTO.getOverview());
-        movie.setGenre(movieDTO.getGenre());
         movie.setPosterPath(movieDTO.getPosterPath());
         return movie;
     }
@@ -38,7 +36,7 @@ public class MovieMapper {
         movieDTO.setOriginalTitle(movie.getOriginalTitle());
         movieDTO.setReleaseDate(movie.getReleaseDate());
         movieDTO.setOverview(movie.getOverview());
-        movieDTO.setGenre(movie.getGenre());
+        movieDTO.setGenre(movie.getGenre().getName());
         movieDTO.setPosterPath(movie.getPosterPath());
         return movieDTO;
     }

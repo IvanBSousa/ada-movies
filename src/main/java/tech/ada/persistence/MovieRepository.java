@@ -1,4 +1,4 @@
-package tech.ada.repository;
+package tech.ada.persistence;
 
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -12,5 +12,4 @@ public class MovieRepository implements PanacheRepository<Movie> {
     public Optional<Movie> findByTitle(String title) {
         return find("originalTitle", title).firstResultOptional();
     }
-
 }
